@@ -1,7 +1,8 @@
 
 
 export enum DataEntitiesTypes {
-    GetPatientsList= 'patients'
+    GetPatientsList= 'patients',
+    LoginUser = 'api/users'
 }
 
 

@@ -1,14 +1,24 @@
-import React from "react";
+import React, {useContext} from "react";
 import styles from './/header.module.scss';
 import logo from '../../Assets/logo.png';
+import {DashBoardContext} from "../App/dashboard-context-provider";
+import {LogOut} from "react-feather";
+
 
 const Header = () => {
 
-    return(
+    const {logout} = useContext(DashBoardContext);
+
+    return (
         <div className={styles.cont}>
-            <img className={styles.logo} src={logo} alt={logo}/>
-            <div className={styles.name}>
-                GLOBALI
+            <div className={styles.logoTitle}>
+                <img className={styles.logo} src={logo} alt={logo}/>
+                <div className={styles.name} onClick={logout}>
+                    GLOBALI
+                </div>
+            </div>
+            <div className={styles.logout} onClick={logout}>
+               LOGOUT<LogOut/>
             </div>
         </div>
     );

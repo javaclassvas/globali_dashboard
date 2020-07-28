@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import styles from './/patients.module.scss';
 import _ from 'lodash';
 import {IPatient} from "../../Types/data.dto";
@@ -6,55 +6,39 @@ import client from "../../Utils/client";
 import {DataEntitiesTypes} from "../../Enums/api.enums";
 import {api} from "../../Config/config";
 import {AxiosError, AxiosResponse} from "axios";
-
+import {Clipboard} from "react-feather";
 
 interface ITableData {
     data: IPatient[] | null
 }
-
-
-let testArray = [{
-    "firstName": "Mike",
-    "lastName": "Testing",
-    "email": "testing123@mail.com",
-    "phone": "555111333",
-    "country": "Israel",
-    "disease": "COVID-19",
-    "docLink": "link here"
-}]
-
 
 const PatientsTable = () => {
 
     let apiUrl: string = `${api.protocol}://${api.host}:${api.port}/`;
 
     const [state, setState] = useState<ITableData>({
-        data: testArray,
+        data: null,
     });
 
-    const {data} = state;
+    let {data} = state;
 
-    const print = async () => {
-
+    const fetchData = async () => {
         return await client.get(`${apiUrl}${DataEntitiesTypes.GetPatientsList}`).then((response: AxiosResponse) => {
             if (response) {
-                console.log(response.data)
-                setState(response.data);
-                console.log(state.data)
+                return response.data;
             }
         }).then().catch((error: AxiosError) => {
             return {done: false, message: error.response ? error.response.data.message : 'Unknown error'};
-        });
-    }
+        });    }
 
 
-
-
-
+    useEffect(() => {
+        fetchData().then(v => setState({data:v}))
+    },[])
 
     return (
         <>
-            <div onClick={() => print()}>CLICK HERE TO RECEIVE LIST OF POTENTIAL PATIENTS</div>
+            <div>LIST OF POTENTIAL PATIENTS</div>
             <table className={styles.table}>
                 <thead className={styles.thread}>
                 <tr>
@@ -86,7 +70,8 @@ const PatientsTable = () => {
                         <td>{phone}</td>
                         <td>{country}</td>
                         <td>{disease}</td>
-                        <td>{docLink}</td>
+                        <td>{<div className={styles.docLink}><Clipboard onClick={() => {
+                            console.log(docLink)}}/></div>}</td>
                     </tr>
                 ))}
                 </tbody>

@@ -5,13 +5,11 @@ import {TUser} from "../../Types/user";
 
 type TDashBoardContext = {
     user?: TUser;
-    login: (nickname: string) => Promise<void>;
+    login: (nickname: string, password: string) => Promise<boolean>;
     logout: () => void;
 };
 
 export const DashBoardContext = createContext<TDashBoardContext>({} as TDashBoardContext);
-
-export const NEW_MESSAGE_EVENT = "new-message";
 
 export const DashBoardContextProvider: React.FC = ({
                                                   children
@@ -20,11 +18,14 @@ export const DashBoardContextProvider: React.FC = ({
         "chatUser"
     );
 
-    // const login = async (nickname: string): Promise<void> =>
-    //     setUser(await userApi.login(nickname));
-
-    const login = async (): Promise<void> =>
-        setUser(await userApi.login());
+    const login = async (nickname: string, password: string): Promise<boolean> =>{
+        const loggedUser = await userApi.login(nickname, password);
+        if(loggedUser){
+            setUser(loggedUser)
+            return true;
+        }
+        return false;
+    }
 
 
     const logout = () => setUser(undefined);
