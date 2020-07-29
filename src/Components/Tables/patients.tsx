@@ -14,7 +14,7 @@ interface ITableData {
 
 const PatientsTable = () => {
 
-    let apiUrl: string = `${api.protocol}://${api.host}:${api.port}/`;
+    let apiUrl: string = `${api.protocol}://${api.host}/`;
 
     const [state, setState] = useState<ITableData>({
         data: null,
